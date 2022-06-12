@@ -3,7 +3,7 @@ name: Build documentation and deploy to Github Pages
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   generate-openapi-spec:
