@@ -1,10 +1,8 @@
 # Nidus API Specification
 
-API specifications for the Nidus project.
+API specification for the [Nidus project](https://github.com/alexandrelamberty/nidus).
 
-## Validation
+See [documentation](https://alexandrelamberty.github.io/nidus-api/)
 
-## Documentation
 
-Github page
 
