@@ -15,7 +15,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: spec-file
-          path: api/specification.json
+          path: api/specification.yaml
   deploy:
     needs: generate-openapi-spec
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
         uses: Legion2/swagger-ui-action@v1
         with:
           output: swagger-ui
-          spec-file: api/specification.json
+          spec-file: api/specification.yaml
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
