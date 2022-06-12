@@ -9,9 +9,9 @@ info:
     name: Alexandre Lamberty
     email: mail@alexandrelamberty.com
 servers:
-  - url: http://petstore.swagger.io/v1
+  - url: https://api.alexandrelamberty.com/nidus/v1
 tags:
-  - name: pets
+  - name: monitoring
 paths:
-  /pets: {}
-  /pets/{petId}: {}
+  /devices: {}
+  /devices/{deviceId}: {}
