@@ -15,3 +15,5 @@ tags:
 paths:
   /devices: {}
   /devices/{deviceId}: {}
+  /zones: {}
+  /zones/{zoneId}: {}
