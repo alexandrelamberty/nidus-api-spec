@@ -1,0 +1,412 @@
+openapi: 3.0.0
+info:
+  title: Nidus
+  description: Home Automation and Monitoring
+  version: "1.0"
+  contact:
+    name: Alexandre Lamberty
+    url: alexandrelamberty.com
+    email: mail@alexandrelamberty.com
+  license:
+    name: MIT License
+    url: "https://opensource.org/licenses/MIT"
+servers:
+  - url: "https://development.nidus.lan/v1"
+    description: Development server
+  - url: "https://staging.nidus.lan/v1"
+    description: Staging server
+  - url: "https://api.nidus.lan/v1"
+    description: Production server
+paths:
+  /devices:
+    get:
+      summary: Get Devices
+      tags:
+        - device
+      responses:
+        "200":
+          $ref: "#/components/responses/GetDevicesSuccess"
+      operationId: get-devices
+      description: Return a list of device
+      parameters:
+        - $ref: "#/components/parameters/skip"
+        - $ref: "#/components/parameters/limit"
+        - schema:
+            type: string
+          in: query
+          name: mac
+          description: Mac
+        - schema:
+            type: string
+          in: query
+          name: zoneId
+          description: Mac
+    parameters: []
+    post:
+      summary: Create Device
+      tags:
+        - device
+      operationId: create-device
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateDeviceSuccess"
+      description: Create a device
+      requestBody:
+        $ref: "#/components/requestBodies/CreateDevice"
+  "/devices/{deviceId}":
+    parameters:
+      - $ref: "#/components/parameters/deviceId"
+    get:
+      summary: Get Device
+      tags:
+        - device
+      responses:
+        "200":
+          $ref: "#/components/responses/GetDeviceSuccess"
+      operationId: get-device
+      description: Return device based on his id
+    delete:
+      summary: Delete Device
+      tags:
+        - device
+      operationId: delete-device
+      responses:
+        "200":
+          $ref: "#/components/responses/DeleteDeviceSuccess"
+      description: Delete device based on his id
+    patch:
+      summary: Patch Device
+      operationId: update-device
+      responses:
+        "200":
+          description: OK
+      description: Update an existing device based on hids id
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateDevice"
+  "/devices/{deviceId}/state":
+    parameters:
+      - $ref: "#/components/parameters/deviceId"
+    get:
+      description: Retrieve the state of a device
+      summary: Get Device State By ID
+      tags:
+        - device
+      operationId: get-devices-deviceId-state
+      responses:
+        "200":
+          $ref: "#/components/responses/GetDeviceStateSuccess"
+  /zones:
+    get:
+      summary: Get Zones
+      tags:
+        - zone
+      responses:
+        "200":
+          $ref: "#/components/responses/GetZonesSuccess"
+      operationId: get-zones
+      description: Return a list of zone
+    post:
+      summary: Create Zone
+      tags:
+        - zone
+      operationId: post-zone
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateZoneSuccess"
+      description: Create a zone
+      requestBody:
+        $ref: "#/components/requestBodies/CreateZone"
+  "/zones/{zoneId}":
+    parameters:
+      - $ref: "#/components/parameters/zoneId"
+    get:
+      summary: Get Zone By ID
+      tags:
+        - zone
+      responses:
+        "200":
+          $ref: "#/components/responses/GetZoneSuccess"
+      operationId: get-zone
+      description: Return a zone based on his id
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateZone"
+    delete:
+      summary: Delete Zone By Id
+      description: Delete a zone based on ID
+      tags:
+        - zone
+      operationId: delete-zone-zoneId
+      responses:
+        "200":
+          description: OK
+    patch:
+      summary: Patch Zone By Id
+      operationId: patch-zone-zoneId
+      responses:
+        "200":
+          description: OK
+      description: Patch a zone based on ID
+components:
+  schemas:
+    Device:
+      title: Device
+      description: A device represent an IoT with wireless capacities amongst others
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique MongoDB ObjectId
+          example: 5349b4ddd2781d08c09890f3
+        mac:
+          type: string
+          description: The mac address of the device
+          example: "00:00:5e:00:53:af"
+        capabilities:
+          type: array
+          description: The capabilities of the device
+          items:
+            $ref: "#/components/schemas/Capability"
+        zone:
+          $ref: "#/components/schemas/Zone"
+    Zone:
+      title: Zone
+      description: A zone where a device is located
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the zone
+          example: 5349b4ddd2781d08c09890f3
+        name:
+          type: string
+          description: The name of the zone
+          example: Kitchen
+    DeviceState:
+      title: DeviceState
+      description: The state of a device
+      type: object
+      properties:
+        lastUpdate:
+          type: string
+          description: The last device update time
+          example: "2007-11-13T09:00"
+    Capability:
+      title: Capability
+      description: A capability of a device
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          description: The id of the capabality
+          example: 1
+        name:
+          type: string
+          description: The name of the capability
+          example: sensor/Temperature
+    ErrorResponse:
+      type: object
+      description: Details of the error response
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Machine readable error code
+          example: CA0045
+        message:
+          type: string
+          description: Human readable information about the error
+          example: Error message from the system in human readable form
+  requestBodies:
+    CreateDevice:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              "":
+                type: string
+          examples:
+            Create a new device:
+              value:
+                name: Temp & Humidity
+                zone:
+                  id: 1
+                  name: Kitchen
+      description: Device to create
+    CreateZone:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              "":
+                type: string
+          examples:
+            Create a new zone:
+              value:
+                name: Kitchen
+      description: Zone to create
+    UpdateDevice:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              "":
+                type: string
+              mac:
+                type: string
+              zone:
+                $ref: "#/components/schemas/Zone"
+          examples:
+            Update device name:
+              value:
+                name: Temp and Sensor
+            Update device zone:
+              value:
+                zone:
+                  id: zezae
+                  name: Kitchen
+    UpdateZone:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              "":
+                type: string
+          examples:
+            Upodate zone name:
+              value:
+                name: Living room
+  responses:
+    GetZonesSuccess:
+      description: A list of zones
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Zone"
+          examples:
+            A list of zones:
+              value:
+                - id: azeraz
+                  name: Entry
+                - id: azer
+                  name: Kitchen
+                - id: az
+                  name: Living room
+                - id: azer
+                  name: Workshop
+    CreateZoneSuccess:
+      description: The zone created
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Zone"
+          examples:
+            The zone created:
+              value:
+                id: sdfg
+                name: Kitchen
+    CreateDeviceSuccess:
+      description: A device object
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeviceState"
+          examples:
+            The device created:
+              value:
+                id: 1
+                name: Kitchen Temp and Humidity
+    GetDeviceStateSuccess:
+      description: A device state
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeviceState"
+          examples:
+            A device state:
+              value:
+                lastUpdate: string
+    GetDevicesSuccess:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+    ErrorResponse:
+      description: Details of the error response
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+    GetDeviceSuccess:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+    DeleteDeviceSuccess:
+      description: Delete device response
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+    GetZoneSuccess:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+  parameters:
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Max records to return
+    skip:
+      name: skip
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Number of items to skip
+    deviceId:
+      name: deviceId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The device identification
+    zoneId:
+      name: zoneId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The zone identification
+tags:
+  - name: device
+    description: Device
+  - name: zone
+    description: Zone
