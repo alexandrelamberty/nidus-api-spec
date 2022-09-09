@@ -1,8 +1,9 @@
+[![Lint api](https://github.com/alexandrelamberty/nidus-api-spec/actions/workflows/lint.yml/badge.svg)](https://github.com/alexandrelamberty/nidus-api-spec/actions/workflows/lint.yml)
+[![Build docs](https://github.com/alexandrelamberty/nidus-api-spec/actions/workflows/documentation.yml/badge.svg)](https://github.com/alexandrelamberty/nidus-api-spec/actions/workflows/documentation.yml)
+
 # Nidus API Specification
 
-API specification for the [Nidus project](https://github.com/alexandrelamberty/nidus).
+Home monitoring API specification for the
+[Nidus](https://github.com/alexandrelamberty/nidus) project.
 
-See [documentation](https://alexandrelamberty.github.io/nidus-api/)
-
-
-
+See the [documentation](https://alexandrelamberty.github.io/nidus-api-spec/).
