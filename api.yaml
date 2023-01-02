@@ -38,7 +38,7 @@ paths:
       summary: Pair a Device
       tags:
         - Devices
-      operationId: post-devices-pair
+      operationId: post-pair-device
       responses:
         "200":
           description: OK
@@ -112,7 +112,7 @@ paths:
       tags:
         - Devices
       responses: {}
-      operationId: get-devices-unpair
+      operationId: get-devices-reset
       description: Reset a device based on its ID.
     parameters:
       - schema:
