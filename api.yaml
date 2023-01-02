@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: Nidus
   description: Home Automation and Monitoring
@@ -17,12 +17,27 @@ servers:
     description: Staging server
   - url: "http://api.nidus.lan"
     description: Production server
+tags:
+  - name: Devices
+    description: Devices
+  - name: Zones
+    description: Zones
+  - name: Capabilities
+    description: Capabilities
+  - name: Network
+    description: Network
+  - name: Messaging
+    description: Messaging
+  - name: Widgets
+    description: Widgets
+security:
+  - API Key - 1: []
 paths:
   /devices/pair:
     post:
-      summary: Pair Device
+      summary: Pair a Device
       tags:
-        - devices
+        - Devices
       operationId: post-devices-pair
       responses:
         "200":
@@ -32,137 +47,146 @@ paths:
       description: Pair a device
   /devices:
     get:
-      summary: List Devices
+      summary: List All Devices
       tags:
-        - devices
+        - Devices
       responses:
         "200":
           $ref: "#/components/responses/ListDevicesSuccess"
       operationId: get-devices
-      description: Return a list of device
+      description: List all devices on the system.
       parameters:
         - $ref: "#/components/parameters/skip"
         - $ref: "#/components/parameters/limit"
-        - schema:
-            type: string
-          in: query
-          name: mac
-          description: Mac
-        - schema:
-            type: string
-          in: query
-          name: zoneId
-          description: Mac
-    parameters: []
-    post:
-      summary: Create Device
-      tags:
-        - devices
-      operationId: create-device
-      responses:
-        "200":
-          $ref: "#/components/responses/ListDevicesSuccess"
-      description: Create a device
-      requestBody:
-        $ref: "#/components/requestBodies/CreateDevice"
+        - $ref: "#/components/parameters/zone_id"
+        - $ref: "#/components/parameters/capability_id"
   "/devices/{deviceId}":
     parameters:
       - $ref: "#/components/parameters/deviceId"
     get:
-      summary: Get Device
+      summary: Retrieve a Device
       tags:
-        - devices
+        - Devices
       responses:
         "200":
           $ref: "#/components/responses/GetDeviceSuccess"
       operationId: get-device
-      description: Return device based on his id
+      description: Retrieve the details about an existing device based on its ID.
     delete:
-      summary: Delete Device
+      summary: Delete a Device
       tags:
-        - devices
+        - Devices
       operationId: delete-device
       responses:
         "200":
           $ref: "#/components/responses/DeleteDeviceSuccess"
-      description: Delete device based on his id
+      description: Delete an existing device based on its ID.
     patch:
-      summary: Patch Device
-      operationId: update-device
+      summary: Update a Device
       tags:
-        - devices
+        - Devices
       responses:
         "200":
           description: OK
-      description: Update an existing device based on hids id
+      operationId: update-device
+      description: Update the details about an existing device based on its ID.
       requestBody:
         $ref: "#/components/requestBodies/UpdateDevice"
+  "/devices/{deviceId}/unpair":
+    get:
+      summary: Un pair a Device
+      tags:
+        - Devices
+      responses: {}
+      operationId: get-devices-unpair
+      description: Un pair a device from the system.
+    parameters:
+      - schema:
+          type: string
+        name: deviceId
+        in: path
+        required: true
+  "/devices/{deviceId}/reset":
+    get:
+      summary: Reset a Device
+      tags:
+        - Devices
+      responses: {}
+      operationId: get-devices-unpair
+      description: Reset a device based on its ID.
+    parameters:
+      - schema:
+          type: string
+        name: deviceId
+        in: path
+        required: true
   /zones:
     get:
-      summary: List Zones
+      summary: List All Zones
       tags:
-        - zones
+        - Zones
       responses:
         "200":
           $ref: "#/components/responses/ListZonesSuccess"
       operationId: get-zones
-      description: Return a list of zone
+      description: Retrieve all zones in the system.
     post:
-      summary: Create Zone
+      summary: Create a New Zone
       tags:
-        - zones
+        - Zones
       operationId: post-zone
       responses:
         "200":
           $ref: "#/components/responses/CreateZoneSuccess"
-      description: Create a zone
+      description: Create a new zone.
       requestBody:
         $ref: "#/components/requestBodies/CreateZone"
   "/zones/{zoneId}":
     parameters:
       - $ref: "#/components/parameters/zoneId"
     get:
-      summary: Get Zone By ID
+      summary: Retrieve a Zone
       tags:
-        - zones
+        - Zones
       responses:
         "200":
           $ref: "#/components/responses/GetZoneSuccess"
       operationId: get-zone
-      description: Return a zone based on his id
+      description: Retrieve details about a zone based on its ID.
       requestBody:
         $ref: "#/components/requestBodies/UpdateZone"
     delete:
-      summary: Delete Zone By Id
-      description: Delete a zone based on ID
+      summary: Delete a Zone
+      description: Delete a zone based on its ID.
       tags:
-        - zones
+        - Zones
       operationId: delete-zone-zoneId
       responses:
         "200":
           description: OK
     patch:
-      summary: Patch Zone By Id
+      summary: Update a Zone
       operationId: patch-zone-zoneId
       tags:
-        - zones
+        - Zones
       responses:
         "200":
           description: OK
-      description: Patch a zone based on ID
+      description: Update a zone based on ID.
   /capabilities:
     get:
-      summary: List Capabilities
+      summary: List All Capabilities
       tags:
-        - capabilities
+        - Capabilities
       responses:
         "200":
           $ref: "#/components/responses/ListCapabilitiesSuccess"
       operationId: get-capabilities
+      description: List all capabilities of the system.
     post:
       summary: Create Capability
       tags:
-        - capabilities
+        - Capabilities
       operationId: post-capabilities
       responses:
         "200":
@@ -171,11 +195,12 @@ paths:
         $ref: "#/components/requestBodies/CreateCapability"
   "/capabilities/{capabilityId}":
     get:
-      summary: Get Capability
+      summary: Retrieve a Capability
       tags:
-        - capabilities
+        - Capabilities
       responses: {}
       operationId: get-capability
+      description: Retrieve details about a capability.
     parameters:
       - schema:
           type: string
@@ -186,54 +211,71 @@ paths:
       summary: Patch Capability
       operationId: patch-capabilities-capabilityId
       tags:
-        - capabilities
+        - Capabilities
       responses:
         "200":
           description: OK
     delete:
       summary: Delete Capability
       tags:
-        - capabilities
+        - Capabilities
       operationId: delete-capabilities-capabilityId
       responses:
         "200":
           description: OK
   /measurements:
     get:
-      summary: List Measurements
+      summary: List All Measurements
       tags:
-        - measurements
+        - Measurements
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/ListMeasurementsSuccess"
       operationId: get-measurements
       parameters:
         - schema:
             type: string
           in: query
+      description: List all measurements from the system.
     post:
-      summary: Create Measurement
+      summary: Create a New Measurement
       tags:
-        - measurements
+        - Measurements
       operationId: post-measurements
       responses:
         "200":
           description: OK
       requestBody:
         $ref: "#/components/requestBodies/CreateMeasurement"
+      description: Create a new measurement.
+  /measurements/last:
+    get:
+      summary: List last measurements
+      tags:
+        - Measurements
+      responses:
+        "200":
+          description: OK
+      operationId: get-measurements
+      parameters:
+        - $ref: "#/components/parameters/device_id"
+        - $ref: "#/components/parameters/measurement_type"
+      description: List all lasts measurements.
+    parameters: []
   /network/scan:
     get:
-      summary: Scan Network
+      summary: Scan a Network
       tags:
-        - network
+        - Network
       responses: {}
       operationId: get-network-scan
+      description: Scan a network interface for devices.
     parameters: []
   /messaging:
     get:
-      summary: List Messages
+      summary: List All Messages
       tags:
-        - messaging
+        - Messaging
       responses:
         "200":
           description: OK
@@ -249,23 +291,46 @@ paths:
             type: string
           in: query
           name: topic
+      description: List all messages from the messaging system for a specific topic.
     parameters: []
     post:
       summary: Publish Message
       tags:
-        - messaging
+        - Messaging
       operationId: post-messaging
       responses:
         "200":
           description: OK
   /messaging/topics:
     get:
-      summary: List Topics
+      summary: List All Topics
       tags:
-        - messaging
+        - Messaging
       responses: {}
       operationId: get-message-topics
+      description: List all topics from the messaging system.
     parameters: []
+  /widgets:
+    get:
+      summary: List All Widgets
+      tags:
+        - Widgets
+      responses:
+        "200":
+          $ref: "#/components/responses/ListWidgets"
+      operationId: get-widgets
+      description: List all the widgets created by the GUI web application.
+    post:
+      summary: Create widget
+      operationId: post-widgets
+      tags:
+        - Widgets
+      responses:
+        "200":
+          description: OK
+      description: Create a widget
+      requestBody:
+        $ref: "#/components/requestBodies/CreateWidget"
 components:
   schemas:
     Device:
@@ -276,7 +341,7 @@ components:
         id:
           type: string
           description: A unique MongoDB ObjectId
-          example: 5349b4ddd2781d08c09
+          example: 6335853299432a1a95be1be3
           readOnly: true
         name:
           type: string
@@ -307,7 +372,7 @@ components:
         id:
           type: string
           description: The id of the zone
-          example: 5349b4ddd2781d08c09890f3
+          example: 63358544a6bceb91ad17415f
         name:
           type: string
           description: The name of the zone
@@ -318,9 +383,9 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
           description: The id of the capabality
-          example: 1
+          example: 633585577333643474baa760
         type:
           type: string
           enum:
@@ -340,10 +405,12 @@ components:
       properties:
         id:
           type: string
+          example: 6335856332632e5461cd1ce5
         topic:
           $ref: "#/components/schemas/Topic"
         text:
           type: string
+          example: "20"
     Topic:
       title: Topic
       x-stoplight:
@@ -352,45 +419,47 @@ components:
       properties:
         id:
           type: string
+          example: 6335856fa046bb650f45d9b0
         name:
           type: string
-    Measurements:
-      title: Measurements
-      x-stoplight:
-        id: jpfwggy3p1u0q
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        device:
-          $ref: "#/components/schemas/Device"
-        start_date:
-          type: string
-          format: date-time
-        end_date:
-          type: string
-          format: date-time
-        type:
-          type: string
           example: temperature
-        measurements:
-          $ref: "#/components/schemas/Measurement"
-        transaction_count:
-          type: number
-        sum:
-          type: number
     Measurement:
-      title: Mesurement
+      title: Measurement
       x-stoplight:
         id: rqb7tuxa2oaj1
       type: object
       properties:
+        id:
+          type: string
+          example: 6335856fa046bb650f45d9b0
+        metadata:
+          type: object
+          properties:
+            device_id:
+              type: string
+            type:
+              type: string
+        value:
+          type: string
+          example: "22"
         timestamp:
           type: string
           format: date-time
-        value:
+    Widget:
+      title: Widget
+      x-stoplight:
+        id: s9nm8cipa30vb
+      type: object
+      properties:
+        id:
           type: string
+          example: 633585f76f5705405e25b942
+        device_id:
+          type: string
+          example: 63358601300c55fbd7ab45a4
+        capability:
+          type: string
+          example: sensor/temperature
   requestBodies:
     CreateDevice:
       content:
@@ -466,23 +535,29 @@ components:
           schema:
             type: object
             properties:
-              device_id:
-                type: string
-                format: uuid
+              metadata:
+                type: object
+                properties:
+                  device_id:
+                    type: string
+                    example: 6335853299432a1a95be1be3
+                  type:
+                    type: string
+                    enum:
+                      - temperature
+                      - humidity
+                      - pressure
+                    example: temperature
               timestamp:
                 type: string
                 format: date-time
+                example: "2021-05-19T20:00:00.000Z"
               value:
                 type: number
                 example: 22
-              type:
-                type: string
-                example: temperature
             required:
-              - device_id
               - timestamp
               - value
-              - type
       description: New measurement
     CreateCapability:
       content:
@@ -512,10 +587,6 @@ components:
           schema:
             type: object
             properties:
-              name:
-                type: string
-                maxLength: 80
-                minLength: 1
               mac:
                 type: string
                 pattern: "^[a-fA-F0-9]{2}(:[a-fA-F0-9]{2}){5}$"
@@ -524,16 +595,24 @@ components:
                 type: string
                 format: ipv4
             required:
-              - name
               - mac
               - ip
-          examples:
-            example-1:
-              value:
-                name: string
-                mac: string
-                ip: 192.168.0.1
       description: Post request to pair a device
+    CreateWidget:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              device_id:
+                type: string
+                example: 633586d2295c53530860b24d
+              capability:
+                type: string
+                example: sensor/temperature
+            required:
+              - device_id
+              - capability
   responses:
     ListZonesSuccess:
       description: A list of zones
@@ -554,17 +633,6 @@ components:
                 type: string
               count:
                 type: string
-          examples:
-            A list of zones:
-              value:
-                - id: azeraz
-                  name: Entry
-                - id: azer
-                  name: Kitchen
-                - id: az
-                  name: Living room
-                - id: azer
-                  name: Workshop
     CreateZoneSuccess:
       description: The zone created
       content:
@@ -644,11 +712,9 @@ components:
             properties:
               id:
                 type: string
-              data:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Measurements"
-              skip:
+              metadata:
+                type: object
+              "":
                 type: string
     ListCapabilitiesSuccess:
       description: Example response
@@ -658,6 +724,14 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/Capability"
+    ListWidgets:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Widget"
   parameters:
     limit:
       name: limit
@@ -699,21 +773,48 @@ components:
       required: false
       schema:
         type: string
+    capability_id:
+      name: capability_id
+      in: query
+      schema:
+        type: string
+        example: sensor/temperature
+      description: Device capability id
+    device_mac:
+      name: device_mac
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Device mac address
+    zone_id:
+      name: zone_id
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Device zone id
+    device_id:
+      name: device_id
+      in: query
+      required: true
+      schema:
+        type: string
+      description: The device unique id
+    measurement_type:
+      name: measurement_type
+      in: query
+      schema:
+        type: string
+        enum:
+          - temperature
+          - pressure
+          - humidity
+      description: The measurement type
+      required: true
   securitySchemes:
     API Key - 1:
       name: key
       type: apiKey
       in: header
-tags:
-  - name: devices
-    description: Devices
-  - name: zones
-    description: Zones
-  - name: capabilities
-    description: Capabilities
-  - name: network
-    description: Network
-  - name: messaging
-    description: Messaging
-security:
-  - API Key - 1: []
+  examples: {}
