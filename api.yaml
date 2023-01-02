@@ -256,7 +256,7 @@ paths:
       responses:
         "200":
           description: OK
-      operationId: get-measurements
+      operationId: get-last-measurements
       parameters:
         - $ref: "#/components/parameters/device_id"
         - $ref: "#/components/parameters/measurement_type"
@@ -650,11 +650,6 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Device"
-          examples:
-            The device created:
-              value:
-                id: 1
-                name: Kitchen Temp and Humidity
     ListDevicesSuccess:
       description: Example response
       content:
@@ -812,9 +807,3 @@ components:
           - humidity
       description: The measurement type
       required: true
-  securitySchemes:
-    API Key - 1:
-      name: key
-      type: apiKey
-      in: header
-  examples: {}
