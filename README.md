@@ -6,4 +6,4 @@
 Home monitoring API specification for the
 [Nidus](https://github.com/alexandrelamberty/nidus) project.
 
-See the [documentation](https://alexandrelamberty.github.io/nidus-api-spec/).
+See the [documentation](https://open-nidus.github.io/nidus-api-spec/).
