@@ -42,9 +42,17 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/PairDeviceSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
       requestBody:
         $ref: '#/components/requestBodies/PairDevice'
-      description: Initiates the pairing process for a new device.
+      description: 'Initiates the pairing process for a new device when it is first initialized. '
+      security:
+        - ApiKeyAuth: []
   /devices:
     get:
       summary: List Devices
@@ -53,6 +61,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ListDevices'
+        '403':
+          description: Forbidden
       operationId: get-devices
       description: Retrieves a list of all devices in the system.
       parameters:
@@ -60,6 +70,8 @@ paths:
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/zone_id'
         - $ref: '#/components/parameters/capability_id'
+      security:
+        - BearerAuth: []
   '/devices/{deviceId}':
     parameters:
       - $ref: '#/components/parameters/deviceId'
@@ -70,8 +82,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetDeviceSuccess'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       operationId: get-device
       description: Retrieve the details about an existing device based on its ID.
+      security:
+        - BearerAuth: []
     delete:
       summary: Delete a Device
       tags:
@@ -80,7 +98,13 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DeleteDeviceSuccess'
+        '403':
+          description: Forbidden
+        '404':
+          $ref: '#/components/responses/NotFound'
       description: Delete an existing device based on its ID.
+      security:
+        - BearerAuth: []
     patch:
       summary: Update a Device
       tags:
@@ -88,10 +112,18 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/UpdateDeviceSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       operationId: update-device
       description: Update the details about an existing device based on its ID.
       requestBody:
         $ref: '#/components/requestBodies/UpdateDevice'
+      security:
+        - BearerAuth: []
   '/devices/{deviceId}/unpair':
     get:
       summary: Un pair a Device
@@ -100,8 +132,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/UnpairDeviceSuccess'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       operationId: get-devices-unpair
       description: Un pair a device from the system.
+      security:
+        - BearerAuth: []
     parameters:
       - $ref: '#/components/parameters/deviceId'
   '/devices/{deviceId}/reset':
@@ -112,8 +150,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ResetDeviceSuccess'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       operationId: get-devices-reset
       description: Reset a device based on its ID.
+      security:
+        - BearerAuth: []
     parameters:
       - $ref: '#/components/parameters/deviceId'
   /zones:
@@ -124,8 +168,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ListZones'
+        '403':
+          description: Forbidden
       operationId: get-zones
       description: Retrieve all zones in the system.
+      security:
+        - BearerAuth: []
     post:
       summary: Create a New Zone
       tags:
@@ -134,9 +182,15 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/CreateZoneSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          description: Forbidden
       description: Create a new zone.
       requestBody:
         $ref: '#/components/requestBodies/CreateZone'
+      security:
+        - BearerAuth: []
   '/zones/{zoneId}':
     parameters:
       - $ref: '#/components/parameters/zoneId'
@@ -147,8 +201,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetZoneSuccess'
+        '403':
+          description: Forbidden
+        '404':
+          $ref: '#/components/responses/NotFound'
       operationId: get-zone
       description: Retrieve details about a zone based on its ID.
+      security:
+        - BearerAuth: []
     delete:
       summary: Delete a Zone
       description: Delete a zone based on its ID.
@@ -158,6 +218,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DeleteZoneSuccess'
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - BearerAuth: []
     patch:
       summary: Update a Zone
       operationId: patch-zone-zoneId
@@ -166,9 +232,17 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/UpdateZoneSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Not Found
       description: Update a zone based on ID.
       requestBody:
         $ref: '#/components/requestBodies/UpdateZone'
+      security:
+        - BearerAuth: []
   /capabilities:
     get:
       summary: List Capabilities
@@ -177,8 +251,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ListCapabilities'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       operationId: get-capabilities
       description: List all capabilities of the system.
+      security:
+        - BearerAuth: []
     post:
       summary: Create Capability
       tags:
@@ -188,8 +266,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/CreateCapabilitySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       requestBody:
         $ref: '#/components/requestBodies/CreateCapability'
+      security:
+        - BearerAuth: []
   '/capabilities/{capabilityId}':
     get:
       summary: Retrieve a Capability
@@ -198,8 +282,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetCapabilitySuccess'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       operationId: get-capability
       description: Retrieve details about a capability.
+      security:
+        - BearerAuth: []
     parameters:
       - $ref: '#/components/parameters/capabilityId'
     patch:
@@ -211,8 +301,16 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/UpdateCapabilitySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       requestBody:
         $ref: '#/components/requestBodies/UpdateCapability'
+      security:
+        - BearerAuth: []
     delete:
       summary: Delete Capability
       description: Delete a capability.
@@ -222,6 +320,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DeleteCapabilitySuccess'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - BearerAuth: []
   /measurements:
     get:
       summary: List Measurements
@@ -230,6 +334,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ListMeasurements'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       operationId: get-measurements
       description: List all measurements from the system.
       parameters:
@@ -237,6 +343,8 @@ paths:
         - $ref: '#/components/parameters/end_date'
         - $ref: '#/components/parameters/device_id'
         - $ref: '#/components/parameters/device_mac'
+      security:
+        - BearerAuth: []
     post:
       summary: Create a New Measurement
       tags:
@@ -245,9 +353,15 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       requestBody:
         $ref: '#/components/requestBodies/CreateMeasurement'
       description: Create a new measurement.
+      security:
+        - BearerAuth: []
   /network/scan:
     get:
       summary: Scan a Network
@@ -256,8 +370,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ScanNetworkSuccess'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       operationId: get-network-scan
       description: Scan a network interface for devices.
+      security:
+        - BearerAuth: []
     parameters: []
   /widgets:
     get:
@@ -267,10 +385,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ListWidgets'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       operationId: get-widgets
       description: List all the widgets created by the GUI web application.
       parameters:
         - $ref: '#/components/parameters/device_id'
+      security:
+        - BearerAuth: []
     post:
       summary: Create a New Widget
       operationId: post-widgets
@@ -279,9 +401,15 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/CreateWidgetSuccess'
+        '400':
+          description: Bad Request
+        '403':
+          $ref: '#/components/responses/Forbidden'
       description: Create a new widget for GUI web application.
       requestBody:
         $ref: '#/components/requestBodies/CreateWidget'
+      security:
+        - BearerAuth: []
 components:
   schemas:
     Device:
@@ -399,10 +527,6 @@ components:
             required:
               - ''
               - floor
-          examples:
-            Create a new zone:
-              value:
-                name: Kitchen
       description: Request body for creating a new zone.
     UpdateDevice:
       content:
@@ -561,7 +685,7 @@ components:
       description: Request body for creating a new widget.
   responses:
     ListZones:
-      description: Zones successfully listed.
+      description: List of Zones.
       content:
         application/json:
           schema:
@@ -570,7 +694,7 @@ components:
               $ref: '#/components/schemas/Zone'
       headers: {}
     CreateZoneSuccess:
-      description: Zone successfully created.
+      description: Created Zone.
       content:
         application/json:
           schema:
@@ -581,7 +705,7 @@ components:
                 id: sdfg
                 name: Kitchen
     ListDevices:
-      description: Devices successfully listed.
+      description: List of devices.
       content:
         application/json:
           schema:
@@ -589,38 +713,38 @@ components:
             items:
               $ref: '#/components/schemas/Device'
     GetDeviceSuccess:
-      description: Device successfully retrieved.
+      description: Retrieved Device.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Device'
     DeleteDeviceSuccess:
-      description: Device successfully deleted.
+      description: Deleted Device success message.
       content:
         application/json:
           schema:
             type: string
             default: Device successfully deleted.
     GetZoneSuccess:
-      description: Zone successfully retrieved.
+      description: Retrieved Zone.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Zone'
     GetCapabilitySuccess:
-      description: Capability successfully retrieved.
+      description: Retrieved Capability.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Capability'
     CreateCapabilitySuccess:
-      description: Capability successfully created.
+      description: Created Capability.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Capability'
     ListMeasurements:
-      description: Measurements successfully listed.
+      description: List of Measurements.
       content:
         application/json:
           schema:
@@ -628,7 +752,7 @@ components:
             items:
               $ref: '#/components/schemas/Measurement'
     ListCapabilities:
-      description: Capabilities successfully listed.
+      description: List of Capabilities.
       content:
         application/json:
           schema:
@@ -636,7 +760,7 @@ components:
             items:
               $ref: '#/components/schemas/Capability'
     ListWidgets:
-      description: Widgets successfully listed.
+      description: List of Widgets.
       content:
         application/json:
           schema:
@@ -644,59 +768,59 @@ components:
             items:
               $ref: '#/components/schemas/Widget'
     UpdateDeviceSuccess:
-      description: Device successfully updated.
+      description: Updated Device.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Device'
     UnpairDeviceSuccess:
-      description: Device successfully unpaired.
+      description: Message of succesfull device unpair.
       content:
         application/json:
           schema:
             type: string
             default: Device successfully unpaired.
     ResetDeviceSuccess:
-      description: Device reset successfully.
+      description: Reset Device success message.
       content:
         application/json:
           schema:
             type: string
             default: Device successfully reseted.
     PairDeviceSuccess:
-      description: Device successfully paired.
+      description: Paired Device.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Device'
     DeleteZoneSuccess:
-      description: Zone successfully deleted.
+      description: Deleted Zone success message.
       content:
         application/json:
           schema:
             type: string
             default: Zone successfully deleted.
     DeleteCapabilitySuccess:
-      description: Capability successfully deleted.
+      description: Deleted Capability success message.
       content:
         application/json:
           schema:
             type: string
             default: Capability successfully deleted.
     UpdateZoneSuccess:
-      description: Zone successfully updated.
+      description: Updated Zone.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Zone'
     UpdateCapabilitySuccess:
-      description: Capability successfully updated.
+      description: Updated Capability.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Capability'
     ScanNetworkSuccess:
-      description: Network successfully scanned.
+      description: List of devices connected to the local area network.
       content:
         application/json:
           schema:
@@ -704,11 +828,37 @@ components:
             items:
               type: string
     CreateWidgetSuccess:
-      description: Widget successfully created.
+      description: Created Widget.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Widget'
+    NotFound:
+      description: Not Found exception message.
+      content:
+        application/json:
+          schema:
+            type: string
+    Forbidden:
+      description: Forbidden exception message.
+      content:
+        application/json:
+          schema:
+            type: string
+    BadRequest:
+      description: Bad Request exception message.
+      content:
+        application/json:
+          schema:
+            type: string
+    InternalServerError:
+      description: Internal Server Error exception message.
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
   parameters:
     limit:
       name: limit
@@ -797,6 +947,3 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-security:
-  - ApiKeyAuth: []
-  - BearerAuth: []
