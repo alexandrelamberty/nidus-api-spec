@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Nidus
-  description: Home Automation and Monitoring API
+  description: Home Automation and Monitoring System
   contact:
     name: Alexandre Lamberty
     url: alexandrelamberty.com
@@ -18,6 +18,8 @@ servers:
   - url: 'http://api.nidus.lan'
     description: Production server
 tags:
+  - name: Auth
+    description: Endpoints for authentication-related operations
   - name: Capabilities
     description: Operations related to device capabilities
   - name: Devices
@@ -41,13 +43,13 @@ paths:
       operationId: post-pair-device
       responses:
         '200':
-          $ref: '#/components/responses/PairDeviceSuccess'
+          $ref: '#/components/responses/200_PairDevice'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '500':
-          description: Internal Server Error
+          $ref: '#/components/responses/500_InternalServerError'
       requestBody:
         $ref: '#/components/requestBodies/PairDevice'
       description: 'Initiates the pairing process for a new device when it is first initialized. '
@@ -60,9 +62,11 @@ paths:
         - Devices
       responses:
         '200':
-          $ref: '#/components/responses/ListDevices'
+          $ref: '#/components/responses/200_DeviceList'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-devices
       description: Retrieves a list of all devices in the system.
       parameters:
@@ -81,11 +85,13 @@ paths:
         - Devices
       responses:
         '200':
-          $ref: '#/components/responses/GetDeviceSuccess'
+          $ref: '#/components/responses/200_Device'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-device
       description: Retrieve the details about an existing device based on its ID.
       security:
@@ -97,11 +103,13 @@ paths:
       operationId: delete-device
       responses:
         '200':
-          $ref: '#/components/responses/DeleteDeviceSuccess'
+          $ref: '#/components/responses/200_DeleteDevice'
         '403':
-          description: Forbidden
+          description: 403_NotFound
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       description: Delete an existing device based on its ID.
       security:
         - BearerAuth: []
@@ -113,11 +121,13 @@ paths:
         '200':
           $ref: '#/components/responses/UpdateDeviceSuccess'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: update-device
       description: Update the details about an existing device based on its ID.
       requestBody:
@@ -131,11 +141,13 @@ paths:
         - Devices
       responses:
         '200':
-          $ref: '#/components/responses/UnpairDeviceSuccess'
+          $ref: '#/components/responses/200_UnpairDevice'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-devices-unpair
       description: Un pair a device from the system.
       security:
@@ -149,11 +161,13 @@ paths:
         - Devices
       responses:
         '200':
-          $ref: '#/components/responses/ResetDeviceSuccess'
+          $ref: '#/components/responses/200_ResetDevice'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-devices-reset
       description: Reset a device based on its ID.
       security:
@@ -167,9 +181,11 @@ paths:
         - Zones
       responses:
         '200':
-          $ref: '#/components/responses/ListZones'
+          $ref: '#/components/responses/200_ZoneList'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-zones
       description: Retrieve all zones in the system.
       security:
@@ -181,11 +197,13 @@ paths:
       operationId: post-zone
       responses:
         '200':
-          $ref: '#/components/responses/CreateZoneSuccess'
+          $ref: '#/components/responses/200_Zone'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       description: Create a new zone.
       requestBody:
         $ref: '#/components/requestBodies/CreateZone'
@@ -200,11 +218,13 @@ paths:
         - Zones
       responses:
         '200':
-          $ref: '#/components/responses/GetZoneSuccess'
+          $ref: '#/components/responses/200_Zone'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-zone
       description: Retrieve details about a zone based on its ID.
       security:
@@ -217,11 +237,13 @@ paths:
       operationId: delete-zone-zoneId
       responses:
         '200':
-          $ref: '#/components/responses/DeleteZoneSuccess'
+          $ref: '#/components/responses/200_DeleteZone'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          description: Not Found
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       security:
         - BearerAuth: []
     patch:
@@ -233,11 +255,13 @@ paths:
         '200':
           $ref: '#/components/responses/UpdateZoneSuccess'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          description: Not Found
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       description: Update a zone based on ID.
       requestBody:
         $ref: '#/components/requestBodies/UpdateZone'
@@ -250,9 +274,11 @@ paths:
         - Capabilities
       responses:
         '200':
-          $ref: '#/components/responses/ListCapabilities'
+          $ref: '#/components/responses/200_CapabilityList'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-capabilities
       description: List all capabilities of the system.
       security:
@@ -265,11 +291,13 @@ paths:
       description: Create a new capability.
       responses:
         '200':
-          $ref: '#/components/responses/CreateCapabilitySuccess'
+          $ref: '#/components/responses/200_Capability'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       requestBody:
         $ref: '#/components/requestBodies/CreateCapability'
       security:
@@ -281,11 +309,13 @@ paths:
         - Capabilities
       responses:
         '200':
-          $ref: '#/components/responses/GetCapabilitySuccess'
+          $ref: '#/components/responses/200_Capability'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-capability
       description: Retrieve details about a capability.
       security:
@@ -302,11 +332,13 @@ paths:
         '200':
           $ref: '#/components/responses/UpdateCapabilitySuccess'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       requestBody:
         $ref: '#/components/requestBodies/UpdateCapability'
       security:
@@ -319,11 +351,13 @@ paths:
       operationId: delete-capabilities-capabilityId
       responses:
         '200':
-          $ref: '#/components/responses/DeleteCapabilitySuccess'
+          $ref: '#/components/responses/200_DeleteCapability'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       security:
         - BearerAuth: []
   /measurements:
@@ -333,9 +367,11 @@ paths:
         - Measurements
       responses:
         '200':
-          $ref: '#/components/responses/ListMeasurements'
+          $ref: '#/components/responses/200_MeasurementList'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-measurements
       description: List all measurements from the system.
       parameters:
@@ -354,9 +390,11 @@ paths:
         '200':
           description: OK
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       requestBody:
         $ref: '#/components/requestBodies/CreateMeasurement'
       description: Create a new measurement.
@@ -369,9 +407,11 @@ paths:
         - Network
       responses:
         '200':
-          $ref: '#/components/responses/ScanNetworkSuccess'
+          $ref: '#/components/responses/200_ScanNetwork'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-network-scan
       description: Scan a network interface for devices.
       security:
@@ -384,9 +424,11 @@ paths:
         - Widgets
       responses:
         '200':
-          $ref: '#/components/responses/ListWidgets'
+          $ref: '#/components/responses/200_WidgetList'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       operationId: get-widgets
       description: List all the widgets created by the GUI web application.
       parameters:
@@ -400,11 +442,13 @@ paths:
         - Widgets
       responses:
         '200':
-          $ref: '#/components/responses/CreateWidgetSuccess'
+          $ref: '#/components/responses/200_Widget'
         '400':
-          description: Bad Request
+          $ref: '#/components/responses/400_BadRequest'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
       description: Create a new widget for GUI web application.
       requestBody:
         $ref: '#/components/requestBodies/CreateWidget'
@@ -518,14 +562,12 @@ components:
           schema:
             type: object
             properties:
-              '':
+              name:
                 type: string
               floor:
                 type: string
-                x-stoplight:
-                  id: xqywz4fjj4vve
             required:
-              - ''
+              - name
               - floor
       description: Request body for creating a new zone.
     UpdateDevice:
@@ -534,18 +576,14 @@ components:
           schema:
             type: object
             properties:
-              '':
+              name:
                 type: string
               ip:
                 type: string
-                x-stoplight:
-                  id: 36hn8jucby2xa
               zone:
                 $ref: '#/components/schemas/Zone'
               capabilities:
                 type: array
-                x-stoplight:
-                  id: xe5097ynjee77
                 items:
                   $ref: '#/components/schemas/Capability'
           examples:
@@ -564,12 +602,10 @@ components:
           schema:
             type: object
             properties:
-              '':
+              name:
                 type: string
               floor:
                 type: string
-                x-stoplight:
-                  id: gze3r5j4cl4g2
           examples:
             Upodate zone name:
               value:
@@ -583,28 +619,18 @@ components:
             properties:
               metadata:
                 type: object
-                x-stoplight:
-                  id: vh9l33dl1eihu
                 required:
                   - device_id
                   - type
                 properties:
                   device_id:
                     type: string
-                    x-stoplight:
-                      id: ym0k3kffmc405
                   type:
                     type: string
-                    x-stoplight:
-                      id: 84l0gwod8ubh0
               value:
                 type: string
-                x-stoplight:
-                  id: 1nwxpgtdqmroy
               timestamp:
                 type: string
-                x-stoplight:
-                  id: 6a6j59pvr3crf
             required:
               - metadata
               - value
@@ -638,12 +664,8 @@ components:
             properties:
               type:
                 type: string
-                x-stoplight:
-                  id: ip67y47my8c08
               kind:
                 type: string
-                x-stoplight:
-                  id: 5psvjjspt8f3b
       description: Request body for creating a new capability.
     PairDevice:
       content:
@@ -670,8 +692,6 @@ components:
             properties:
               type:
                 type: string
-                x-stoplight:
-                  id: odolwse9uayxh
               device_id:
                 type: string
                 example: 633586d2295c53530860b24d
@@ -684,7 +704,7 @@ components:
               - capability
       description: Request body for creating a new widget.
   responses:
-    ListZones:
+    200_ZoneList:
       description: List of Zones.
       content:
         application/json:
@@ -693,7 +713,7 @@ components:
             items:
               $ref: '#/components/schemas/Zone'
       headers: {}
-    CreateZoneSuccess:
+    200_Zone:
       description: Created Zone.
       content:
         application/json:
@@ -704,7 +724,7 @@ components:
               value:
                 id: sdfg
                 name: Kitchen
-    ListDevices:
+    200_DeviceList:
       description: List of devices.
       content:
         application/json:
@@ -712,38 +732,26 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Device'
-    GetDeviceSuccess:
+    200_Device:
       description: Retrieved Device.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Device'
-    DeleteDeviceSuccess:
+    200_DeleteDevice:
       description: Deleted Device success message.
       content:
         application/json:
           schema:
             type: string
             default: Device successfully deleted.
-    GetZoneSuccess:
-      description: Retrieved Zone.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Zone'
-    GetCapabilitySuccess:
-      description: Retrieved Capability.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Capability'
-    CreateCapabilitySuccess:
+    200_Capability:
       description: Created Capability.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Capability'
-    ListMeasurements:
+    200_MeasurementList:
       description: List of Measurements.
       content:
         application/json:
@@ -751,7 +759,7 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Measurement'
-    ListCapabilities:
+    200_CapabilityList:
       description: List of Capabilities.
       content:
         application/json:
@@ -759,7 +767,7 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Capability'
-    ListWidgets:
+    200_WidgetList:
       description: List of Widgets.
       content:
         application/json:
@@ -773,34 +781,34 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Device'
-    UnpairDeviceSuccess:
+    200_UnpairDevice:
       description: Message of succesfull device unpair.
       content:
         application/json:
           schema:
             type: string
             default: Device successfully unpaired.
-    ResetDeviceSuccess:
+    200_ResetDevice:
       description: Reset Device success message.
       content:
         application/json:
           schema:
             type: string
             default: Device successfully reseted.
-    PairDeviceSuccess:
+    200_PairDevice:
       description: Paired Device.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Device'
-    DeleteZoneSuccess:
+    200_DeleteZone:
       description: Deleted Zone success message.
       content:
         application/json:
           schema:
             type: string
             default: Zone successfully deleted.
-    DeleteCapabilitySuccess:
+    200_DeleteCapability:
       description: Deleted Capability success message.
       content:
         application/json:
@@ -819,7 +827,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Capability'
-    ScanNetworkSuccess:
+    200_ScanNetwork:
       description: List of devices connected to the local area network.
       content:
         application/json:
@@ -827,31 +835,31 @@ components:
             type: array
             items:
               type: string
-    CreateWidgetSuccess:
+    200_Widget:
       description: Created Widget.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Widget'
-    NotFound:
-      description: Not Found exception message.
-      content:
-        application/json:
-          schema:
-            type: string
-    Forbidden:
-      description: Forbidden exception message.
-      content:
-        application/json:
-          schema:
-            type: string
-    BadRequest:
+    400_BadRequest:
       description: Bad Request exception message.
       content:
         application/json:
           schema:
             type: string
-    InternalServerError:
+    404_NotFound:
+      description: Not Found exception message.
+      content:
+        application/json:
+          schema:
+            type: string
+    403_Forbidden:
+      description: Forbidden exception message.
+      content:
+        application/json:
+          schema:
+            type: string
+    500_InternalServerError:
       description: Internal Server Error exception message.
       content:
         application/json:
